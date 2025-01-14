@@ -1,6 +1,6 @@
 import json
 import csv
-res = {}
+res = {} #create results dictionary
 
 #open both of the files
 with open ('stations.csv',) as file: 
@@ -36,6 +36,7 @@ for station in stations:
 
     # Summing the precipitation values for each year
     total_yearly_percipitation = sum(total_month_precipitation.values())
+    total_precipitation_all_stations += total_yearly_percipitation
 
     # The relative_monhtly_precipitation per month over the entire year per city (still inside the loop)
     relative_monthly_precipitation= {} #dictionary for the relative monthly precipitation
@@ -50,20 +51,15 @@ for station in stations:
         'relative_precipitation' : relative_monthly_precipitation
                 }    
 
-    #summing the precipitation values for each year
-    total_yearly_precipitation = sum(total_month_precipitation.values())
-
-    # add to the global total precipitation
-    total_precipitation_all_stations += total_yearly_precipitation 
-
-for city_name, data in res.items():
-    data['relative_yearly_precipitation'] = (
-        data['total_yearly_precipitation']/ total_precipitation_all_stations)
+#create a loop that calculates for each city its  relative yearly precipitation compared to the global total 
+for city_name, city_data in res.items():
+    city_data['relative_yearly_precipitation'] = ( #adding from city data
+    city_data['year_precipitation']/ total_precipitation_all_stations) # taking from city data
     
      
 
 
-# Create the Jason file 
+# Create the Jason file to put all the results in 
 with open('results.json', 'w') as file: 
     json.dump(res, file, indent = 4)
 
